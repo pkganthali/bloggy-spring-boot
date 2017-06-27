@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+	<div class="panel-heading">All Bloggers!</div>
+	<div class="panel-body">
+		<form>
+			<div data-ng-show="status" class="alert alert-info">{{status}}</div>
+			<table class="table table-striped">
+				<tr data-ng-repeat="user in users">
+					<td><a href="#/view/{{user.id}}">{{user.id}}</a></td>
+					<td>{{user.firstName}}</td>
+					<td>{{user.lastName}}</td>
+					<td>{{user.email}}</td>
+					<td><button class="btn btn-danger"
+							data-ng-click="deleteUser(user.id)">Delete</button>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

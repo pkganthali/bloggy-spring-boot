@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+	<div class="panel-heading">Search Bloggers!</div>
+	<div class="panel-body">
+		<form>
+			<div class="form-group">
+				<label>Id</label> <input class="form-control" type="text"
+					data-ng-model="id"></input>
+			</div>
+			<button class="btn btn-default" data-ng-click="find()">Find</button>
+			<div data-ng-show="status" class="alert alert-info">{{status}}</div>
+			<table class="table table-striped">
+				<tr>
+					<td><a href="#/view/{{user.id}}">{{user.id}}</a></td>
+					<td>{{user.firstName}}</td>
+					<td>{{user.lastName}}</td>
+					<td>{{user.email}}</td>
+					<td><button class="btn btn-danger" data-ng-show="user"
+							data-ng-click="deleteUser(user.id)">Delete</button>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
