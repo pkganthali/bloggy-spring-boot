@@ -23,7 +23,7 @@ app.controller('AddUserController', function($scope, $http) {
 
 	$scope.add = function() {
 		$http.post("/bloggy/api/user", $scope.user).then(function(response) {
-			$scope.status = response.data + ' has got created successfully.';
+			$scope.status = response.data.payload + ' has got created successfully.';
 		});
 	};
 
@@ -31,9 +31,9 @@ app.controller('AddUserController', function($scope, $http) {
 
 app.controller('ShowAllController', function($scope, $http) {
 	$http.get("/bloggy/api/user").then(function(response) {
-		$scope.users = response.data;
-		console.log(response.data.length);
-		if(response.data.length == 0) {
+		$scope.users = response.data.payload;
+		console.log(response.data.payload.length);
+		if(response.data.payload.length == 0) {
 			$scope.status = 'No bloggers registered yet...';
 		}
 	});	
@@ -41,12 +41,19 @@ app.controller('ShowAllController', function($scope, $http) {
 	$scope.deleteUser = function(id) {
 		$http.delete("/bloggy/api/user/" + id).then(
 				function(response) {
-					if(response.data == true) {
-						$scope.status = id + ' has been deleted successfully.';
-						
-						$http.get("/bloggy/api/user").then(function(response) {
-							$scope.users = response.data;
-						});
+					console.dir(response);
+					if(response.data.failed == true) {
+						$scope.status = response.data.errorMessage + "\n" + response.data.rootCause;
+					}
+					else {
+						if(response.data.payload == true) {
+							$scope.status = id + ' has been deleted successfully.';
+							
+							$http.get("/bloggy/api/user").then(function(response) {
+								console.dir(response);
+								$scope.users = response.data.payload;
+							});
+						}
 					}
 				});
 	};
@@ -56,16 +63,23 @@ app.controller('FindUserController', function($scope, $http) {
 	$scope.find = function() {
 		$http.get("/bloggy/api/user/" + $scope.id).then(
 				function(response) {
-					$scope.user = response.data;
+					$scope.user = response.data.payload;
 				});
 	};
 	
 	$scope.deleteUser = function(id) {
 		$http.delete("/bloggy/api/user/" + id).then(
+				
 				function(response) {
-					if(response.data == true) {
-						$scope.status = id + ' has been deleted successfully.';						
-						$scope.user = null;
+					console.dir(response);
+					if(response.data.failed == true) {
+						$scope.status = response.data.errorMessage + "\n" + response.data.rootCause;
+					}
+					else {
+						if(response.data.payload == true) {
+							$scope.status = id + ' has been deleted successfully.';						
+							$scope.user = null;
+						}
 					}
 				});
 	};
@@ -73,12 +87,12 @@ app.controller('FindUserController', function($scope, $http) {
 
 app.controller('ViewUserController', function($scope, $http, $routeParams) {
 	$http.get('/bloggy/api/user/' + $routeParams.id).then(function(response) {
-		$scope.user = response.data;
+		$scope.user = response.data.payload;
 	});
 	
 	$scope.update = function() {
 		$http.post("/bloggy/api/user", $scope.user).then(function(response) {
-			$scope.status = response.data + ' has got updated successfully.';
+			$scope.status = response.data.payload + ' has got updated successfully.';
 		});
 	};
 });
